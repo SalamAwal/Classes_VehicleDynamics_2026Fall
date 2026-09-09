@@ -220,6 +220,8 @@ scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week0
 % Run Week02_Quiz04_NumericalSimICs?
 scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_Quiz04_NumericalSimICs');
 
+% Run Week02_Quiz05_NumericalSimDeltaTs?
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_Quiz05_NumericalSimDeltaTs');
 
 if ~isempty(scriptToRun)
 	run(scriptToRun);
