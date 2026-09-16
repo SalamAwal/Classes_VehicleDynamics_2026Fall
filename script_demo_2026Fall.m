@@ -21,13 +21,19 @@
 % 
 % 2026_08_24 by Sean Brennan, sbrennan@psu.edu
 % - First edit of the repo from the 2026 Spring template
-% - In script_demo_2026Spring.m
+% - In script_demo_2026Fall.m
 %   % * Deleted repeat calls to PathPlanning_GeomTools_GeomClassLibrary
 % 
 % 2026_09_04 by Sean Brennan, sbrennan@psu.edu
-% - In script_demo_2026Spring.m
+% - In script_demo_2026Fall.m
 %   % * Added a function to automatically find the next unfinished
 %   %   % assignment and run it.
+%
+%
+% 2026_09_15 by Sean Brennan, sbrennan@psu.edu
+% - In script_demo_2026Fall.m
+%   % * In fcn_INTERNAL_checkIfStudentAlreadyDidAssignment, added verbose
+%   %   % outputs so we can directly see what scripts were checked
 
 % TO-DO:
 % - 2026_08_24 by Sean Brennan, sbrennan@psu.edu
@@ -244,16 +250,24 @@ end
 %% function fcn_INTERNAL_checkIfStudentAlreadyDidAssignment
 function scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,scriptToCheck)
 dataForThisScript = fullfile(pwd,'Data',sprintf('answersSoFar_%s.mat',scriptToCheck));
+scriptToRunName = sprintf('script_%s',scriptToCheck);
+fprintf(1,'Checking if this assignment is complete: ');
+fcn_DebugTools_cprintf('Blue',sprintf(' %s ',scriptToRunName));
 if isempty(scriptToRun) && ~exist(dataForThisScript,'file')
-	scriptToRun = sprintf('script_%s',scriptToCheck);
+	scriptToRun = scriptToRunName;
+	fprintf(1,'<-- data file not found. Need to run the script.\n');
 end
 if isempty(scriptToRun) && exist(dataForThisScript,'file')
 	load(dataForThisScript,'answers');
 	if ~any(strcmp(answers,'SUBMITTED'))
-		scriptToRun = sprintf('script_%s',scriptToCheck);
+		scriptToRun = scriptToRunName;		
+		fprintf(1,'<-- data file found but not yet submitted. Need to run the script.\n');
+	else
+		fprintf(1,'<-- data file found and assignment submitted. Assignment is done!\n');
 	end
 end
 end
+
 
 %% function fcn_INTERNAL_clearUtilitiesFromPathAndFolders
 function fcn_INTERNAL_clearUtilitiesFromPathAndFolders
