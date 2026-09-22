@@ -1,7 +1,3 @@
-%% script_HW1_plotDataFromGPS.m
-% Loads GPS data from phone data collection (MATLAB drive) and plots
-% results
-
 %% Set the file names
 % Specify the folder and file names associated with the data. Edit these
 % names to match your folder structure. Note: the PWD command returns the

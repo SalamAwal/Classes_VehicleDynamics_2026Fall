@@ -214,20 +214,35 @@ pause;
 
 scriptToRun = ''; % Assume an empty script to start
 
+fprintf(1,'Checking which scripts need to run:\n');
 % Run Week01_Quiz01_Intro?
-scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week01_Quiz01_Intro');
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week01_Quiz01_Intro',false);
 
 % Run Week01_Quiz02_WhatIsAVehicle?
-scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week01_Quiz02_WhatIsAVehicle');
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week01_Quiz02_WhatIsAVehicle',false);
 
 % Run Week01_Quiz03_Syllabus?
-scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week01_Quiz03_Syllabus');
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week01_Quiz03_Syllabus',false);
 
 % Run Week02_Quiz04_NumericalSimICs?
-scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_Quiz04_NumericalSimICs');
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_Quiz04_NumericalSimICs',true);
 
 % Run Week02_Quiz05_NumericalSimDeltaTs?
-scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_Quiz05_NumericalSimDeltaTs');
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_Quiz05_NumericalSimDeltaTs',true);
+
+% Run script_Week02_HW1_InitialsViaGPS?
+scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,'Week02_HW1_InitialsViaGPS',true);
+
+if ~isempty(scriptToRun)
+	fprintf(1,'\nIt appears that the following script needs to run: \n%s\n',scriptToRun);
+	fprintf(1,'Press any key to continue to the script.\n');
+	pause;
+	run(scriptToRun);
+else
+	fprintf(1,['\nAll caught up! No unsubmitted assignments were found. \n\n' ...
+		'If you wish to re-run a particular script, type the script name in the command line (when >> appears). \n' ...
+		'Do not double-click the script - this will not work.\n']);
+end
 
 if ~isempty(scriptToRun)
 	run(scriptToRun);
@@ -248,23 +263,29 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
 %% function fcn_INTERNAL_checkIfStudentAlreadyDidAssignment
-function scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,scriptToCheck)
+function scriptToRun = fcn_INTERNAL_checkIfStudentAlreadyDidAssignment(scriptToRun,scriptToCheck,flagNeedToCheck)
 dataForThisScript = fullfile(pwd,'Data',sprintf('answersSoFar_%s.mat',scriptToCheck));
 scriptToRunName = sprintf('script_%s',scriptToCheck);
-fprintf(1,'Checking if this assignment is complete: ');
-fcn_DebugTools_cprintf('Blue',sprintf(' %s ',scriptToRunName));
-if isempty(scriptToRun) && ~exist(dataForThisScript,'file')
-	scriptToRun = scriptToRunName;
-	fprintf(1,'<-- data file not found. Need to run the script.\n');
-end
-if isempty(scriptToRun) && exist(dataForThisScript,'file')
-	load(dataForThisScript,'answers');
-	if ~any(strcmp(answers,'SUBMITTED'))
-		scriptToRun = scriptToRunName;		
-		fprintf(1,'<-- data file found but not yet submitted. Need to run the script.\n');
-	else
-		fprintf(1,'<-- data file found and assignment submitted. Assignment is done!\n');
+
+if flagNeedToCheck
+	fprintf(1,'Checking if this assignment is complete: ');
+	fcn_DebugTools_cprintf('Blue',sprintf(' %s ',scriptToRunName));
+	if isempty(scriptToRun) && ~exist(dataForThisScript,'file')
+		scriptToRun = scriptToRunName;
+		fprintf(1,'<-- data file not found. Need to run the script.\n');
 	end
+	if isempty(scriptToRun) && exist(dataForThisScript,'file')
+		load(dataForThisScript,'answers');
+		if ~any(strcmp(answers,'SUBMITTED'))
+			scriptToRun = scriptToRunName;
+			fprintf(1,'<-- data file found but not yet submitted. Need to run the script.\n');
+		else 
+			fprintf(1,'<-- data file found and assignment submitted. Assignment is done!\n');
+		end
+	end
+else
+	fprintf(1,'Skipping assignment as it is past due  : ');
+	fcn_DebugTools_cprintf('Blue',sprintf(' %s \n',scriptToRunName));
 end
 end
 
