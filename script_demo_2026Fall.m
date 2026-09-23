@@ -1,4 +1,4 @@
-%% Introduction to and Purpose of the Code
+ %% Introduction to and Purpose of the Code
 % This is the explanation of the code that can be found by running
 %
 %       script_demo_2026Spring.m
